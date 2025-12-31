@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Responsive Calculator</title>
+
+<style>
+    :root {
+        --calc-scale: 1.1; /* 🔧 CHANGE SIZE HERE */
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #1e1e2f;
+        font-family: Arial, sans-serif;
+        margin: 0;
+    }
+
+    .calculator {
+        background: #2c2c3e;
+        padding: 20px;
+        border-radius: 15px;
+        width: calc(280px * var(--calc-scale));
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        transform: scale(var(--calc-scale));
+    }
+
+    .display {
+        width: 100%;
+        height: calc(60px * var(--calc-scale));
+        background: #111;
+        color: #0f0;
+        font-size: calc(24px * var(--calc-scale));
+        text-align: right;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        overflow-x: auto;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        height: calc(50px * var(--calc-scale));
+        font-size: calc(18px * var(--calc-scale));
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #3e3e55;
+        color: #fff;
+    }
+
+    button:hover {
+        background: #5a5a7a;
+    }
+
+    .operator {
+        background: #ff9500;
+    }
+
+    .operator:hover {
+        background: #ffa733;
+    }
+
+    .equal {
+        background: #28a745;
+        grid-column: span 2;
+    }
+
+    .equal:hover {
+        background: #34c759;
+    }
+
+    .clear {
+        background: #dc3545;
+    }
+
+    .clear:hover {
+        background: #ff4d5a;
+    }
+
+    /* 📱 Mobile */
+    @media (max-width: 480px) {
+        :root {
+            --calc-scale: 0.95;
+        }
+    }
+
+    /* 📱 Very small screens */
+    @media (max-width: 320px) {
+        :root {
+            --calc-scale: 0.85;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <div id="display" class="display">0</div>
+
+    <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button onclick="deleteLast()">⌫</button>
+        <button class="operator" onclick="appendValue('/')">÷</button>
+        <button class="operator" onclick="appendValue('*')">×</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button class="operator" onclick="appendValue('-')">−</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button class="operator" onclick="appendValue('+')">+</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button onclick="appendValue('.')">.</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById("display");
+
+    function appendValue(value) {
+        display.innerText = display.innerText === "0"
+            ? value
+            : display.innerText + value;
+    }
+
+    function clearDisplay() {
+        display.innerText = "0";
+    }
+
+    function deleteLast() {
+        display.innerText =
+            display.innerText.length === 1
+                ? "0"
+                : display.innerText.slice(0, -1);
+    }
+
+    function calculate() {
+        try {
+            display.innerText = eval(display.innerText);
+        } catch {
+            display.innerText = "Error";
+        }
+    }
+
+    // ⌨️ Keyboard support
+    document.addEventListener("keydown", (e) => {
+        const k = e.key;
+
+        if ("0123456789+-*/.".includes(k)) appendValue(k);
+        if (k === "Enter" || k === "=") calculate();
+        if (k === "Backspace") deleteLast();
+        if (k === "Escape") clearDisplay();
+    });
+</script>
+
+</body>
+</html>
